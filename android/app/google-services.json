@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "670734971146",
+    "firebase_url": "https://iot-home-security-d018f.firebaseio.com",
+    "project_id": "iot-home-security-d018f",
+    "storage_bucket": "iot-home-security-d018f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:670734971146:android:eb41509fc55a8131",
+        "android_client_info": {
+          "package_name": "com.iot_home_security"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "670734971146-0e64f7dkpdl08pa0kge3sqeqfg4mrnqj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYEHGDBuf50LBSGXAFGjB4oatUIl3tVVU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:670734971146:android:d6527f216adda6df",
+        "android_client_info": {
+          "package_name": "com.nagybalint.iothomesecurity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "670734971146-0e64f7dkpdl08pa0kge3sqeqfg4mrnqj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYEHGDBuf50LBSGXAFGjB4oatUIl3tVVU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
