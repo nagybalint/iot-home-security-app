@@ -7,8 +7,9 @@
  */
 
 import React, { Component } from 'react';
-import { View, Text, AsyncStorage, Alert } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import firebase, { notifications } from 'react-native-firebase';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class App extends Component<Props> {
     async componentDidMount() {
