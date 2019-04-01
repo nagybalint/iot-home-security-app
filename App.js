@@ -7,12 +7,57 @@
  */
 
 import React, { Component } from 'react';
-import { View, Text, AsyncStorage } from 'react-native';
-import firebase from 'react-native-firebase';
+import { View, Text, AsyncStorage, Alert } from 'react-native';
+import firebase, { notifications } from 'react-native-firebase';
 
 export default class App extends Component<Props> {
     async componentDidMount() {
         this.checkPermission();
+        this.createNotificationListeners();
+    }
+
+    async componentWillUnmount() {
+        this.notificationListener();
+        this.notificationOpenedListener();
+    }
+
+    async createNotificationListeners() {
+        this.notificationListener = firebase.notifications().onNotification(
+            (notification) => {
+                const { title, body } = notification;
+                this.showAlert(title, body);
+            }
+        );
+
+        this.notificationOpenedListener = firebase.notifications().onNotificationOpened(
+            (notificationOpen) => {
+                const { title, body } = notificationOpen.notification.data;
+                this.showAlert(title, body);
+            }
+        );
+
+        const notificationOpen = await firebase.notifications().getInitialNotification();
+        if (notificationOpen) {
+            const { title, body } = notificationOpen.notification.data;
+            this.showAlert(title, body);
+        }
+
+        this.messageListener = firebase.messaging().onMessage(
+            (message) => {
+                console.log(JSON.stringify(message));
+            }
+        );
+    }
+
+    showAlert(title, body) {
+      console.log(`Alert title: ${title}, alert body ${body}`);
+      Alert.alert(
+          title, body, 
+          [
+              {text: 'OK', onPress: () => console.log('On pressed')}
+          ],
+          { cancelable: false }
+      );
     }
 
     async checkPermission() {
