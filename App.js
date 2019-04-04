@@ -8,10 +8,15 @@
 
 import React, { Component } from 'react';
 import { View, Text, Alert } from 'react-native';
+import { createAppContainer, createBottomTabNavigator } from 'react-navigation';
+
 import firebase from 'react-native-firebase';
 
 import { checkPermission } from './src/services/push_notification';
 import { showNotificationAlert } from './src/components/notification_alert';
+import DeviceStatusScreen from './src/screens/DevIceStatusScreen';
+import AuthScreen from './src/screens/AuthScreen';
+import AddDeviceScreen from './src/screens/AddDeviceScreen';
 
 export default class App extends Component<Props> {
     async componentDidMount() {
@@ -53,10 +58,24 @@ export default class App extends Component<Props> {
     }
 
     render() {
+        const MainNavigator = createBottomTabNavigator({
+            auth: {
+                screen: AuthScreen
+            },
+            addDevice: {
+                screen: AddDeviceScreen
+            },
+            deviceStatus: {
+                screen: DeviceStatusScreen
+            }
+        }, {
+            lazy: true
+        });
+
+        const AppContainer = createAppContainer(MainNavigator);
+
         return (
-            <View>
-                <Text>Hello world</Text>
-            </View>
+            <AppContainer />
         );
     }
 }
