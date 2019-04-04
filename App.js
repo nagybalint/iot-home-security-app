@@ -13,7 +13,7 @@ import { createAppContainer, createBottomTabNavigator } from 'react-navigation';
 import firebase from 'react-native-firebase';
 
 import { checkPermission } from './src/services/push_notification';
-import { showNotificationAlert } from './src/components/notification_alert';
+import { showNotificationAlert } from './src/components/NotificationAlert';
 import DeviceStatusScreen from './src/screens/DevIceStatusScreen';
 import AuthScreen from './src/screens/AuthScreen';
 import AddDeviceScreen from './src/screens/AddDeviceScreen';
