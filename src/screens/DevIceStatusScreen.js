@@ -7,7 +7,7 @@ import DeviceStatus from '../components/DeviceStatus';
 class DeviceStatusScreen extends Component {
     render() {
         return(
-            <View>
+            <View style={styles.containerStyle}>
                 <Header 
                     centerComponent={{
                         text: "DEVICE STATUS",
@@ -18,6 +18,9 @@ class DeviceStatusScreen extends Component {
                         color: '#fff' 
                     }}
                     statusBarProps={{translucent: true}}
+                    containerStyle={{
+                        backgroundColor: "#3D6DCC"
+                    }}
                 />
                 <DeviceStatus 
                     timestamp={"2019.04.04 19:32"}
@@ -30,6 +33,9 @@ class DeviceStatusScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    containerStyle: {
+        flex: 1
+    },
     centerComponentStyle: {
         color: '#fff',
         fontSize: 16
