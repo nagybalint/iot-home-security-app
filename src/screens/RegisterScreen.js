@@ -14,8 +14,8 @@ class RegisterScreen extends Component {
             <View style={styles.authContainerStyle}>
                 <AuthInput 
                     confirmPassword
-                    securePassword={false}
-                    placeholderId="Username"
+                    securePassword={true}
+                    placeholderId="Email"
                     placeholderCode="Password"
                     submitTitle="Register"
                 />
