@@ -24,7 +24,7 @@ class DeviceStatus extends Component {
             <View style={styles.containerStyle}>
                 <View style={styles.flexContainerStyle}>
                     <Text style={styles.headerStyle}>
-                        LAST SYNCED AT
+                        Last Synced At
                     </Text>
                     <Text>
                         {this.props.timestamp}
@@ -32,7 +32,7 @@ class DeviceStatus extends Component {
                 </View>
                 <View style={styles.flexContainerStyle}>
                     <Text style={styles.headerStyle}>
-                        CAMERA IMAGE
+                        Camera Image
                     </Text>
                     <Image 
                         source={{uri: this.props.image}}
@@ -41,7 +41,7 @@ class DeviceStatus extends Component {
                 </View>
                 <View style={styles.flexContainerStyle}>
                     <Text style={styles.headerStyle}>
-                        MOTION SENSOR STATUS
+                        Motion Sensor Status
                     </Text>
                     <Text style={styles.textStyle}>
                         {this.getMotionStatus()}
