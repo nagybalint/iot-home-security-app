@@ -8,15 +8,17 @@
 
 import React, { Component } from 'react';
 import { View, Text, Alert } from 'react-native';
-import { createAppContainer, createBottomTabNavigator } from 'react-navigation';
+import { createAppContainer, createBottomTabNavigator, createSwitchNavigator } from 'react-navigation';
 
 import firebase from 'react-native-firebase';
 
 import { checkPermission } from './src/services/push_notification';
 import { showNotificationAlert } from './src/components/NotificationAlert';
-import DeviceStatusScreen from './src/screens/DevIceStatusScreen';
 import AuthScreen from './src/screens/AuthScreen';
+import RegisterScreen from './src/screens/RegisterScreen';
+import LoginScreen from './src/screens/LoginScreen';
 import AddDeviceScreen from './src/screens/AddDeviceScreen';
+import DeviceStatusScreen from './src/screens/DevIceStatusScreen';
 
 export default class App extends Component<Props> {
     async componentDidMount() {
@@ -59,9 +61,17 @@ export default class App extends Component<Props> {
 
     render() {
         const MainNavigator = createBottomTabNavigator({
-            auth: {
-                screen: AuthScreen
-            },
+            authFlow: createBottomTabNavigator({
+                auth: {
+                    screen: AuthScreen
+                },
+                register: {
+                    screen: RegisterScreen
+                },
+                login: {
+                    screen: LoginScreen
+                }
+            }),
             addDevice: {
                 screen: AddDeviceScreen
             },
