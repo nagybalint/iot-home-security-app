@@ -9,6 +9,7 @@ import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
+import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -34,7 +35,8 @@ public class MainApplication extends Application implements ReactApplication {
             new AsyncStoragePackage(),
           new RNFirebasePackage(),
           new RNFirebaseMessagingPackage(),
-          new RNFirebaseNotificationsPackage()
+          new RNFirebaseNotificationsPackage(),
+          new RNFirebaseFirestorePackage()
       );
     }
 

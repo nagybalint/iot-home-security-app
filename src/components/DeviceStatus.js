@@ -19,6 +19,10 @@ class DeviceStatus extends Component {
         }
     }
 
+    formatTime = (timestamp) => {
+        return `${timestamp.getHours()}:${timestamp.getMinutes()} - ${timestamp.toDateString()}`;
+    }
+
     render() {
         return(
             <View style={styles.containerStyle}>
@@ -27,7 +31,7 @@ class DeviceStatus extends Component {
                         Last Synced At
                     </Text>
                     <Text>
-                        {this.props.timestamp}
+                        {this.formatTime(this.props.timestamp)}
                     </Text>
                 </View>
                 <View style={styles.flexContainerStyle}>
