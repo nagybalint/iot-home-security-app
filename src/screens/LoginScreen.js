@@ -16,8 +16,8 @@ class LoginScreen extends Component {
                 <AuthInput 
                     confirmPassword={false}
                     securePassword={true}
-                    placeholderId="Email"
-                    placeholderCode="Password"
+                    placeholderUser="Email"
+                    placeholderPassword="Password"
                     submitTitle="Log In"
                 />
             </View>

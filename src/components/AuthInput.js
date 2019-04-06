@@ -13,7 +13,7 @@ class AuthInput extends Component {
             inputContainerStyle,
         } = styles;
 
-        const placeholderText = `Confirm ${this.props.placeholderCode}`;
+        const placeholderText = `Confirm ${this.props.placeholderPassword}`;
 
         return (
             <Input
@@ -25,6 +25,11 @@ class AuthInput extends Component {
             />
         );
     }
+
+    onButtonPress = () => {
+        
+    }
+
     render() {
         const {
             containerStyle,
@@ -36,14 +41,14 @@ class AuthInput extends Component {
         <View style={containerStyle}>
             <View>
                 <Input
-                    placeholder={this.props.placeholderId}
+                    placeholder={this.props.placeholderUser}
                     leftIcon={{ type: 'font-awesome', name: 'user' }}
                     leftIconContainerStyle={inputIconStyle}
                     containerStyle={inputContainerStyle}
                 />
                 <Input
-                    placeholder={this.props.placeholderCode}
-                    securetext={this.props.securePassword}
+                    placeholder={this.props.placeholderPassword}
+                    secureTextEntry={this.props.securePassword}
                     leftIcon={{ type: 'font-awesome', name: 'lock' }}
                     leftIconContainerStyle={inputIconStyle}
                     containerStyle={inputContainerStyle}
@@ -53,6 +58,7 @@ class AuthInput extends Component {
             <Button 
                 title={this.props.submitTitle}
                 buttonStyle={buttonStyle}
+                onPress={this.onButtonPress}
             />
         </View>
         );
@@ -63,9 +69,11 @@ AuthInput.defaultProps = {
     confirmPassword: false,
     securePassword: true,
     submitTitle: "Submit",
-    placeholderId: "Username",
-    placeholderCode: "Password",
-    submitAction: () => {}
+    placeholderUser: "Username",
+    placeholderPassword: "Password",
+    submitAction: () => {},
+    userRules: (user) => { return true },
+    passwordRules: (password) => { return true }
 };
 
 const styles = StyleSheet.create({

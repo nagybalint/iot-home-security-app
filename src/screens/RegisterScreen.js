@@ -15,8 +15,8 @@ class RegisterScreen extends Component {
                 <AuthInput 
                     confirmPassword
                     securePassword={true}
-                    placeholderId="Email"
-                    placeholderCode="Password"
+                    placeholderUser="Email"
+                    placeholderPassword="Password"
                     submitTitle="Register"
                 />
             </View>

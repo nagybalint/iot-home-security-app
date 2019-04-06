@@ -22,8 +22,8 @@ class AddDeviceScreen extends Component {
                     <AuthInput 
                         confirmPassword={false}
                         securePassword={false}
-                        placeholderId="Device Id"
-                        placeholderCode="Verification Code"
+                        placeholderUser="Device Id"
+                        placeholderPassword="Verification Code"
                         submitTitle="Add Device"
                     />
                 </View>
