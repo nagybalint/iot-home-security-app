@@ -86,9 +86,9 @@ export default class App extends Component<Props> {
         const AppContainer = createAppContainer(MainNavigator);
 
         return (
-            //<Provider store={store} >
+            <Provider store={store} >
                 <AppContainer />
-            //</Provider>
+            </Provider>
         );
     }
 }
