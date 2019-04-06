@@ -1,8 +1,20 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 
 class AuthInput extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: null,
+            password: null,
+            confirm: null,
+            error: null,
+            in_progress: false
+        };
+    }
+
     renderConfirmInput = () => {
         if(!this.props.confirmPassword) {
             return (<View></View>);
@@ -19,15 +31,76 @@ class AuthInput extends Component {
             <Input
                 placeholder={placeholderText}
                 secureTextEntry={this.props.securePassword}
+                errorStyle={styles.errorStyle}
+                errorMessage={this.getErrorMessage('confirm')}
                 leftIcon={{ type: 'font-awesome', name: 'lock' }}
                 leftIconContainerStyle={inputIconStyle}
                 containerStyle={inputContainerStyle}
+                onChangeText={ (confirm) => { this.setState({ confirm, error: null }) } }
             />
         );
     }
 
-    onButtonPress = () => {
-        
+    validateInputs = () => {
+        const { user, password, confirm } = this.state;
+
+        if(!user) {
+            this.setState({ error: { type: 'user', message: 'Required'}});
+            return false;
+        }
+
+        if(!password) {
+            this.setState({ error: { type: 'password', message: 'Required'}});
+            return false;
+        }
+
+        if(!this.props.userRules(user)) {
+            this.setState({ error: { type: 'user', message: this.props.userRules.message}});
+            return false;
+        }
+
+        if(!this.props.passwordRules(password)) {
+            this.setState({ error: { type: 'password', message: this.props.passwordRules.message}});
+            return false;
+        }
+
+        if(this.props.confirmPassword) {
+            if(password !== confirm) {
+                this.setState({ error: { type: 'confirm', message: `Does Not Match ${placeholderPassword} Above`}});
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    getErrorMessage = (type) => {
+        const { error } = this.state;
+        if(!error) {
+            return "";
+        }
+
+        if(error.type !== type) {
+            return "";
+        }
+
+        return error.message;
+    }
+
+    onSubmitPress = async () => {
+        if(this.props.in_progress) {
+            return;
+        }
+
+        if(!this.validateInputs()) {
+            return;
+        }
+
+        this.setState({ in_progress: true });
+        this.props.submitAction(this.props.user, this.props.password).then(
+            () => this.setState({ in_progress: false })
+        );
+
     }
 
     render() {
@@ -42,23 +115,31 @@ class AuthInput extends Component {
             <View>
                 <Input
                     placeholder={this.props.placeholderUser}
+                    errorStyle={styles.errorStyle}
+                    errorMessage={this.getErrorMessage('user')}
                     leftIcon={{ type: 'font-awesome', name: 'user' }}
                     leftIconContainerStyle={inputIconStyle}
                     containerStyle={inputContainerStyle}
+                    onChangeText={ (user) => this.setState({ user, error: null }) }
                 />
                 <Input
                     placeholder={this.props.placeholderPassword}
                     secureTextEntry={this.props.securePassword}
+                    errorStyle={styles.errorStyle}
+                    errorMessage={this.getErrorMessage('password')}
                     leftIcon={{ type: 'font-awesome', name: 'lock' }}
                     leftIconContainerStyle={inputIconStyle}
                     containerStyle={inputContainerStyle}
+                    onChangeText={ (password) => { this.setState({ password, error: null }) } }
                 />
                 {this.renderConfirmInput()}
             </View>
             <Button 
                 title={this.props.submitTitle}
                 buttonStyle={buttonStyle}
-                onPress={this.onButtonPress}
+                onPress={this.onSubmitPress}
+                loading={this.state.in_progress}
+                disabled={this.state.in_progress}
             />
         </View>
         );
@@ -71,9 +152,15 @@ AuthInput.defaultProps = {
     submitTitle: "Submit",
     placeholderUser: "Username",
     placeholderPassword: "Password",
-    submitAction: () => {},
-    userRules: (user) => { return true },
-    passwordRules: (password) => { return true }
+    submitAction: async function(user, password) {},
+    userRules: {
+        checker: (user) => { return true },
+        message: 'Please enter a valid Username'
+    },
+    passwordRules: {
+        checker: (password) => { return true },
+        message: 'Please enter a valid Password'
+    }
 };
 
 const styles = StyleSheet.create({
@@ -93,6 +180,9 @@ const styles = StyleSheet.create({
         margin: 3,
         height:70,
         backgroundColor: "#3D6DCC"
+    }, 
+    errorStyle: {
+        color: 'red'
     }
     
 });
