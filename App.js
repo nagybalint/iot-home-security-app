@@ -9,9 +9,10 @@
 import React, { Component } from 'react';
 import { View, Text, Alert } from 'react-native';
 import { createAppContainer, createBottomTabNavigator, createSwitchNavigator } from 'react-navigation';
-
 import firebase from 'react-native-firebase';
+import { Provider } from 'react-redux';
 
+import store from './src/store';
 import { checkPermission } from './src/services/push_notification';
 import { showNotificationAlert } from './src/components/NotificationAlert';
 import AuthScreen from './src/screens/AuthScreen';
@@ -85,7 +86,9 @@ export default class App extends Component<Props> {
         const AppContainer = createAppContainer(MainNavigator);
 
         return (
-            <AppContainer />
+            //<Provider store={store} >
+                <AppContainer />
+            //</Provider>
         );
     }
 }
