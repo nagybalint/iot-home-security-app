@@ -12,7 +12,7 @@ export default function(state = INTIAL_STATE, action) {
     switch(action.type) {
         case DEVICE_STATUS_FETCH_IN_PROGRESS:
             return {
-                device_status: null, 
+                ...state, 
                 in_progress: true
             };
         case DEVICE_STATUS_FETCH_SUCCESS:

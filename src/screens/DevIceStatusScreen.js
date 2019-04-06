@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, View, Text } from 'react-native';
-import { Button, Header } from 'react-native-elements';
+import { StyleSheet, View, ActivityIndicator } from 'react-native';
+import { Header } from 'react-native-elements';
 import { connect } from 'react-redux';
 
 import * as actions from '../actions';
@@ -13,12 +13,37 @@ class DeviceStatusScreen extends Component {
         this.props.fetchDeviceStatus();
     }
 
+    requestDeviceStatus = () => {
+        // TODO!
+        console.log("Requesting Device Status");
+    }
+
     renderSpinner = () => {
-        return (<View></View>);
+        const { in_progress, device_status } = this.props;
+        
+        if(!in_progress){
+            return (<View></View>);
+        }
+
+        return (
+            <View 
+                style={
+                    !device_status ? 
+                        styles.spinnerInCenterContainerStyle : 
+                        styles.spinnerOnTopContainerStyle
+                }
+            >
+                <ActivityIndicator
+                    size="large"
+                    color="#3D6DCC"
+                />
+            </View>
+        );
     }
 
     renderDeviceStatus = () => {
-        if(!this.props.device_status) {
+        const { device_status } = this.props; 
+        if(!device_status) {
             return (<View></View>);
         }
 
@@ -26,11 +51,7 @@ class DeviceStatusScreen extends Component {
             timestamp,
             camera_image,
             motion_status
-        } = this.props.device_status;
-
-        console.log(
-            `Props received: ${timestamp}, ${motion_status}, ${camera_image}`
-        );
+        } = device_status;
 
         return (
             <DeviceStatus 
@@ -52,7 +73,8 @@ class DeviceStatusScreen extends Component {
                     }}
                     rightComponent={{ 
                         icon: 'sync', 
-                        color: '#fff' 
+                        color: '#fff',
+                        onPress: this.requestDeviceStatus
                     }}
                     statusBarProps={{translucent: true}}
                     containerStyle={{
@@ -73,6 +95,16 @@ const styles = StyleSheet.create({
     centerComponentStyle: {
         color: '#fff',
         fontSize: 16
+    },
+    spinnerOnTopContainerStyle: {
+        marginTop: 20,
+        marginBottom: 20
+    },
+    spinnerInCenterContainerStyle: {
+        flex: 1,
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center"
     }
 });
 
