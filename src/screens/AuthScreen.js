@@ -6,19 +6,31 @@ import Banner from '../components/Banner';
 
 class AuthScreen extends Component {
     render() {
+
+        const {
+            containerStyle,
+            bannerContainerStyle,
+            buttonContainerStyle,
+            buttonStyle
+        } = styles;
+
+        const { navigate } = this.props.navigation;
+
         return(
-            <View style={styles.containerStyle}>
-                <View style={styles.bannerContainerStyle}>
+            <View style={containerStyle}>
+                <View style={bannerContainerStyle}>
                     <Banner />
                 </View>
-                <View style={styles.buttonContainerStyle}>
+                <View style={buttonContainerStyle}>
                     <Button 
                         title="Register"
-                        buttonStyle={styles.buttonStyle}
+                        buttonStyle={buttonStyle}
+                        onPress={() => { navigate('register') }}
                     />
                     <Button 
                         title="Log In"
-                        buttonStyle={styles.buttonStyle}
+                        buttonStyle={buttonStyle}
+                        onPress={() => { navigate('login') }}
                     />
                 </View>
             </View>

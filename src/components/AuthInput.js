@@ -97,7 +97,8 @@ class AuthInput extends Component {
         }
 
         this.setState({ in_progress: true });
-        this.props.submitAction(this.props.user, this.props.password).then(
+        console.log(`Inner start with ${this.state.user}`);
+        this.props.submitAction(this.state.user, this.state.password).then(
             () => this.setState({ in_progress: false })
         );
 
