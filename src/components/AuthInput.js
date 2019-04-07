@@ -54,12 +54,12 @@ class AuthInput extends Component {
             return false;
         }
 
-        if(!this.props.userRules(user)) {
+        if(!this.props.userRules.checker(user)) {
             this.setState({ error: { type: 'user', message: this.props.userRules.message}});
             return false;
         }
 
-        if(!this.props.passwordRules(password)) {
+        if(!this.props.passwordRules.checker(password)) {
             this.setState({ error: { type: 'password', message: this.props.passwordRules.message}});
             return false;
         }
