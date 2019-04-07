@@ -65,8 +65,9 @@ class AuthInput extends Component {
         }
 
         if(this.props.confirmPassword) {
-            if(password !== confirm) {
-                this.setState({ error: { type: 'confirm', message: `Does Not Match ${placeholderPassword} Above`}});
+            if(!confirm || (password != confirm)) {
+                console.log('Password Failed');
+                this.setState({ error: { type: 'confirm', message: `Does Not Match ${this.props.placeholderPassword} Above`}});
                 return false;
             }
         }
@@ -105,6 +106,10 @@ class AuthInput extends Component {
     }
 
     render() {
+        
+        //const { user, password, confirm } = this.state;
+        //console.log(`Strings: ${user}, ${password}, ${confirm}`);
+
         const {
             containerStyle,
             inputIconStyle,

@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
         minHeight: 400
     },
     bannerContainerStyle: {
-        marginTop: 60
+        marginTop: 20
     },
     errorContainerStyle: {
         height: 30,

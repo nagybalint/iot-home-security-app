@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     bannerContainerStyle: {
-        marginTop: 60
+        marginTop: 20
     },
     buttonContainerStyle: {
         flex: 1,
