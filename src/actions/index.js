@@ -1,3 +1,3 @@
-export * from './device_status_actions';
+export * from './device_actions';
 export * from './auth_actions';
 

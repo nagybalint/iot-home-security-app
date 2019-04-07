@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Header } from 'react-native-elements';
+import { connect } from 'react-redux';
+
+import * as actions from '../actions';
 
 import AuthInput from '../components/AuthInput';
 
 class AddDeviceScreen extends Component {
+    componentDidMount() {
+        this.props.fetchDeviceInfo();
+    }
+    
     render() {
         return(
             <View style={styles.containerStyle}>
@@ -51,4 +58,9 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AddDeviceScreen;
+function mapStateToProps({ deviceInfo }) {
+    const { in_progress, error, device_id } = deviceInfo;
+    return { in_progress, fetch_error: error, device_id };
+}
+
+export default connect(mapStateToProps, actions)(AddDeviceScreen);

@@ -8,6 +8,7 @@ import {
 export const logInUser = (user, password) => async (dispatch) => {
     const loggedInUser = firebase.auth().currentUser;
     if (loggedInUser) {
+        console.log(`loggedInUser ${loggedInUser}`);
         dispatch({ type: USER_LOGIN_SUCCESS, payload: loggedInUser });
     }
     try {
