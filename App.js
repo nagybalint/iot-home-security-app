@@ -33,7 +33,7 @@ import Drawer from './src/components/Drawer';
 import { YellowBox } from 'react-native';
 YellowBox.ignoreWarnings(['ViewPagerAndroid', 'Slider', 'Remote debugger']);
 
-export default class App extends Component<Props> {
+export default class App extends Component {
     async cleanSheet() {
         await AsyncStorage.removeItem('deviceId');
         await firebase.auth().signOut();
