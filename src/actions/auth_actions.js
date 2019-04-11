@@ -13,7 +13,7 @@ export const logInUser = (user, password) => async (dispatch) => {
     }
     try {
         let userCredential = await firebase.auth().signInWithEmailAndPassword(user, password);
-        let { loggedInUser } = userCredential;
+        let loggedInUser = userCredential.user;
         console.log("Login Successful");
         dispatch({ type: USER_LOGIN_SUCCESS, payload: loggedInUser }) 
     } catch (err) {

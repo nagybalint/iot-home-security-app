@@ -20,11 +20,18 @@ import RegisterScreen from './src/screens/RegisterScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import AddDeviceScreen from './src/screens/AddDeviceScreen';
 import DeviceStatusScreen from './src/screens/DevIceStatusScreen';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class App extends Component<Props> {
+    async cleanSheet() {
+        await AsyncStorage.removeItem('deviceId');
+        await firebase.auth().signOut();
+    }
+    
     async componentDidMount() {
         checkPermission();
         this.createNotificationListeners();
+        //await this.cleanSheet();
     }
 
     async componentWillUnmount() {

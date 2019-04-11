@@ -10,7 +10,8 @@ import DeviceStatus from '../components/DeviceStatus';
 class DeviceStatusScreen extends Component {
 
     componentDidMount() {
-        this.props.fetchDeviceStatus();
+        console.log('DeviceStatusScreen did mount');
+        this.props.fetchDeviceStatus(this.props.device_id);
     }
 
     requestDeviceStatus = () => {
@@ -63,7 +64,7 @@ class DeviceStatusScreen extends Component {
     } 
 
     render() {
-        console.log("Rendering");
+        console.log("Rendering DeviceStatusScreen");
         return(
             <View style={styles.containerStyle}>
                 <Header 
@@ -108,9 +109,10 @@ const styles = StyleSheet.create({
     }
 });
 
-function mapStateToProps(state) {
-    const { in_progress, device_status } = state.deviceStatus;
-    return { in_progress, device_status };
+function mapStateToProps({ deviceStatus, deviceInfo}) {
+    const { in_progress, device_status } = deviceStatus;
+    const { device_id } = deviceInfo;
+    return { in_progress, device_status, device_id };
 }
 
 export default connect(mapStateToProps, actions)(DeviceStatusScreen);

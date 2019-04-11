@@ -12,10 +12,12 @@ import sleep from '../utils/sleep';
 class LoginScreen extends Component {
 
     componentDidMount() {
+        console.log('LoginScreen did mount');
         this.onAuthComplete(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log('LoginScreen will receive new props');
         this.onAuthComplete(nextProps);
     }
 
@@ -31,6 +33,7 @@ class LoginScreen extends Component {
     }
 
     onAuthComplete = (props) => {
+        console.log(`OnAuthComplete called with ${props.user}`);
         if(props.user) {
             this.props.navigation.navigate('addDevice');
         }
@@ -53,6 +56,7 @@ class LoginScreen extends Component {
     }
 
     render() {
+        console.log('Rendering LoginScreen');
         return(
             <View style={styles.containerStyle}>
             <View style={styles.bannerContainerStyle}>
@@ -106,9 +110,10 @@ const styles = StyleSheet.create({
     }
 });
 
-function mapStateToProps(state) {
-    const { auth } = state;
+function mapStateToProps({ auth }) { 
+    console.log(`Map state to props`);
     const { user, error } = auth;
+    console.log(`user ${user} error ${error}`);
     return { user, error };
 }
 

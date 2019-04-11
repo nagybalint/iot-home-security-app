@@ -2,6 +2,8 @@ import firebase from 'react-native-firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import { 
+    ADD_DEVICE_SUCCESS,
+    ADD_DEVICE_FAIL,
     DEVICE_INFO_FETCH_IN_PROGRESS,
     DEVICE_INFO_FETCH_SUCCESS,
     DEVICE_INFO_FETCH_FAIL,
@@ -10,6 +12,23 @@ import {
 } from './types';
 import { getDeviceId } from '../services/device_management';
 
+export const addDevice = (device_id, verification_code) => async (dispatch) => {
+    let addDeviceFun = firebase.functions().httpsCallable('add_device');
+    try {
+        console.log(`Calling add_device endpoint with ${device_id}, ${verification_code}`);
+        let result = await addDeviceFun({device_id, verification_code});
+        
+        console.log(`Adding device success = ${result.success}`);
+
+        await AsyncStorage.setItem('deviceId', device_id);
+        dispatch({ type: ADD_DEVICE_SUCCESS, payload: device_id });
+    } catch (error) {
+        console.log(`Error adding device ${error.message}`);
+        // if device for the user already exists,
+        // try fetching the device id again
+        dispatch({ type: ADD_DEVICE_FAIL, payload: error.message });
+    }
+}
 
 export const fetchDeviceInfo = () => async (dispatch) => {
     dispatch({ type: DEVICE_INFO_FETCH_IN_PROGRESS, payload: {} });
@@ -31,7 +50,7 @@ export const fetchDeviceInfo = () => async (dispatch) => {
         const { device_id } = result.data;
         if(!device_id) {
             console.log(`Device Id Fetch failed`);
-            dispatch({ type: DEVICE_INFO_FETCH_FAIL, payload: {} });
+            dispatch({ type: DEVICE_INFO_FETCH_FAIL, payload: null });
         } else {
             console.log(`Device Id fetch successful - ${device_id}`);
             await AsyncStorage.setItem('deviceId', device_id);
@@ -43,10 +62,9 @@ export const fetchDeviceInfo = () => async (dispatch) => {
     }
 }
 
-export const fetchDeviceStatus = () => async (dispatch) => {
+export const fetchDeviceStatus = (deviceId) => async (dispatch) => {
+    console.log(`Fetching status of device ${deviceId}`);
     dispatch({ type: DEVICE_STATUS_FETCH_IN_PROGRESS, payload: {} });
-
-    let deviceId = await getDeviceId();
 
     let doc = firebase.firestore().collection('devices').doc(deviceId);
 

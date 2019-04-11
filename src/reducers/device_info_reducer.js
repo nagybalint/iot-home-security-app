@@ -1,7 +1,9 @@
 import {
     DEVICE_INFO_FETCH_IN_PROGRESS,
     DEVICE_INFO_FETCH_FAIL,
-    DEVICE_INFO_FETCH_SUCCESS
+    DEVICE_INFO_FETCH_SUCCESS,
+    ADD_DEVICE_SUCCESS,
+    ADD_DEVICE_FAIL
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -12,6 +14,18 @@ const INITIAL_STATE = {
 
 export default function(state = INITIAL_STATE, action) {
     switch (action.type) {
+        case ADD_DEVICE_SUCCESS: 
+            return {
+                in_progress: false,
+                error: null,
+                device_id: action.payload
+            };
+        case ADD_DEVICE_FAIL: 
+            return {
+                in_progress: false,
+                error: action.payload,
+                device_id: null
+            };
         case DEVICE_INFO_FETCH_IN_PROGRESS:
             return {
                 ...state,
