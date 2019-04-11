@@ -8,9 +8,15 @@
 
 import React, { Component } from 'react';
 import { View, Text, Alert } from 'react-native';
-import { createAppContainer, createBottomTabNavigator, createSwitchNavigator } from 'react-navigation';
+import { 
+    createAppContainer, 
+    createBottomTabNavigator, 
+    createDrawerNavigator 
+} from 'react-navigation';
+import { Icon } from 'react-native-elements';
 import firebase from 'react-native-firebase';
 import { Provider } from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import store from './src/store';
 import { checkPermission } from './src/services/push_notification';
@@ -20,7 +26,12 @@ import RegisterScreen from './src/screens/RegisterScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import AddDeviceScreen from './src/screens/AddDeviceScreen';
 import DeviceStatusScreen from './src/screens/DevIceStatusScreen';
-import AsyncStorage from '@react-native-community/async-storage';
+import SettingsScreen from './src/screens/SettingsScreen';
+import Drawer from './src/components/Drawer';
+
+// Suppress some non-critical warnings while developing the app
+import { YellowBox } from 'react-native';
+YellowBox.ignoreWarnings(['ViewPagerAndroid', 'Slider', 'Remote debugger']);
 
 export default class App extends Component<Props> {
     async cleanSheet() {
@@ -80,12 +91,42 @@ export default class App extends Component<Props> {
                     screen: LoginScreen
                 }
             }),
-            addDevice: {
-                screen: AddDeviceScreen
-            },
-            deviceStatus: {
-                screen: DeviceStatusScreen
-            }
+            main: createDrawerNavigator({
+                Device:  {
+                    screen: createBottomTabNavigator({
+                        addDevice: {
+                            screen: AddDeviceScreen
+                        },
+                        deviceStatus: {
+                            screen: DeviceStatusScreen
+                        }
+                    }),
+                    navigationOptions: ({ navigation }) => ({
+                        drawerIcon: ({tintColor}) => (
+                            <Icon 
+                                name='devices'
+                                color={tintColor}
+                            />
+                        )
+                    })
+                },
+                Settings: {
+                    screen: SettingsScreen,
+                    navigationOptions: ({ navigation }) => ({
+                        drawerIcon: ({tintColor}) => (
+                            <Icon 
+                                name='settings'
+                                color={tintColor}
+                            />
+                        )
+                    })
+                }
+            }, {
+                contentComponent: Drawer,
+                contentOptions: {
+                    activeTintColor: '#3D6DCC'
+                }
+            })
         }, {
             lazy: true
         });

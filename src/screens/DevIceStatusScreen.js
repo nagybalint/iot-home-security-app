@@ -72,6 +72,11 @@ class DeviceStatusScreen extends Component {
                         text: "DEVICE STATUS",
                         style: styles.centerComponentStyle
                     }}
+                    leftComponent={{
+                        icon: 'menu',
+                        color: '#fff',
+                        onPress: this.props.navigation.openDrawer
+                    }}
                     rightComponent={{ 
                         icon: 'sync', 
                         color: '#fff',
