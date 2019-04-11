@@ -77,6 +77,11 @@ class AddDeviceScreen extends Component {
                         text: "ADD DEVICE",
                         style: styles.centerComponentStyle
                     }}
+                    leftComponent={{
+                        icon: 'menu',
+                        color: '#fff',
+                        onPress: this.props.navigation.openDrawer
+                    }}
                     statusBarProps={{translucent: true}}
                     containerStyle={{
                         backgroundColor: "#3D6DCC"

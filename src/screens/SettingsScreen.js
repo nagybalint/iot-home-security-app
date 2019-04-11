@@ -6,6 +6,10 @@ import { connect } from 'react-redux';
 import * as actions from '../actions';
 
 export class SettingsScreen extends Component {
+    logOutUser = () => {
+
+    }
+    
     render() {
         return (
             <View style={styles.containerStyle}>
@@ -24,7 +28,13 @@ export class SettingsScreen extends Component {
                     backgroundColor: "#3D6DCC"
                 }}
             />
-            <Text>Hello Settings</Text>
+            <View style={styles.buttonContainerStyle} >
+                <Button 
+                    buttonStyle={styles.buttonStyle}
+                    title="Log Out"
+                    onPress={this.logOutUser}
+                />
+            </View>
         </View>
         );
     };
@@ -37,6 +47,18 @@ const styles = StyleSheet.create({
     centerComponentStyle: {
         color: '#fff',
         fontSize: 16
+    },
+    buttonContainerStyle: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'stretch',
+        padding: 12
+    },  
+    buttonStyle: {
+        margin: 3,
+        height:70,
+        backgroundColor: "#3D6DCC"
     }
 });
 
