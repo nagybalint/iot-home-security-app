@@ -1,10 +1,28 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
+import { connect } from 'react-redux';
 
 import Banner from '../components/Banner';
 
 class AuthScreen extends Component {
+
+    componentDidMount() {
+        console.log('AuthScreen did mount');
+        this.onAuthComplete(this.props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        console.log('AuthScreen will receive new props');
+        this.onAuthComplete(nextProps);
+    }
+
+    onAuthComplete = (props) => {
+        if(props.user) {
+            this.props.navigation.navigate('addDevice');
+        }
+    }
+
     render() {
 
         const {
@@ -60,4 +78,9 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AuthScreen;
+function mapStateToProps({ auth }) {
+    const { user } = auth;
+    return { user };
+}
+
+export default connect(mapStateToProps, null)(AuthScreen);

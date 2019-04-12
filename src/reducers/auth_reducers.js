@@ -1,6 +1,8 @@
 import {
     USER_LOGIN_SUCCESS,
-    USER_LOGIN_FAIL
+    USER_LOGIN_FAIL,
+    USER_LOGOUT_SUCCESS,
+    USER_LOGOUT_FAIL
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -9,6 +11,7 @@ const INITIAL_STATE = {
 };
 
 export default function(state = INITIAL_STATE, action) {
+    console.log('AuthReducer called');
     switch (action.type) {
         case USER_LOGIN_SUCCESS:
             return {
@@ -18,6 +21,16 @@ export default function(state = INITIAL_STATE, action) {
         case USER_LOGIN_FAIL:
             return {
                 user: null,
+                error: action.payload
+            };
+        case USER_LOGOUT_SUCCESS:
+            return {
+                user: null,
+                error: null
+            };
+        case USER_LOGOUT_FAIL: 
+            return {
+                ...state,
                 error: action.payload
             };
         default:

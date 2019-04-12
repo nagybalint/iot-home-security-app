@@ -3,7 +3,8 @@ import { View, StyleSheet } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 
 class AuthInput extends Component {
-
+    _isMounted = false;
+    
     constructor(props) {
         super(props);
         this.state = {
@@ -13,6 +14,14 @@ class AuthInput extends Component {
             error: null,
             in_progress: false
         };
+    }
+
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     renderConfirmInput = () => {
@@ -66,7 +75,6 @@ class AuthInput extends Component {
 
         if(this.props.confirmPassword) {
             if(!confirm || (password != confirm)) {
-                console.log('Password Failed');
                 this.setState({ error: { type: 'confirm', message: `Does Not Match ${this.props.placeholderPassword} Above`}});
                 return false;
             }
@@ -98,17 +106,18 @@ class AuthInput extends Component {
         }
 
         this.setState({ in_progress: true });
-        console.log(`Inner start with ${this.state.user}`);
-        this.props.submitAction(this.state.user, this.state.password).then(
-            () => this.setState({ in_progress: false })
-        );
+        try {
+            await this.props.submitAction(this.state.user, this.state.password);
+            if(this._isMounted) {
+                this.setState({ in_progress: false });
+            }
+        } catch (error) {
+            console.log(error);
+        }
 
     }
 
     render() {
-        
-        //const { user, password, confirm } = this.state;
-        //console.log(`Strings: ${user}, ${password}, ${confirm}`);
 
         const {
             containerStyle,

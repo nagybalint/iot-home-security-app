@@ -11,13 +11,15 @@ import { View, Text, Alert } from 'react-native';
 import { 
     createAppContainer, 
     createBottomTabNavigator, 
-    createDrawerNavigator 
+    createDrawerNavigator, 
+    createSwitchNavigator
 } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 import firebase from 'react-native-firebase';
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
 import AsyncStorage from '@react-native-community/async-storage';
 
+import * as actions from './src/actions';
 import store from './src/store';
 import { checkPermission } from './src/services/push_notification';
 import { showNotificationAlert } from './src/components/NotificationAlert';
@@ -33,7 +35,7 @@ import Drawer from './src/components/Drawer';
 import { YellowBox } from 'react-native';
 YellowBox.ignoreWarnings(['ViewPagerAndroid', 'Slider', 'Remote debugger']);
 
-export default class App extends Component {
+class RootComponent extends Component {
     async cleanSheet() {
         await AsyncStorage.removeItem('deviceId');
         await firebase.auth().signOut();
@@ -42,12 +44,30 @@ export default class App extends Component {
     async componentDidMount() {
         checkPermission();
         this.createNotificationListeners();
+        this.createAuthStateListener();
         //await this.cleanSheet();
     }
 
     async componentWillUnmount() {
+        this.createAuthStateListener();
         this.notificationListener();
         this.notificationOpenedListener();
+    }
+
+    createAuthStateListener = () => {
+        // Firebase auth returns an unsubsciber method
+        this.authstateListener = firebase.auth().onAuthStateChanged(
+            (user) => {
+                console.log(`AuthStateListener fired with ${user}`);
+                if(!user) {
+                    // Fire logged out action
+                    this.props.userLoggedOut();
+                } else {
+                    // Fire logged in action
+                    this.props.userLoggedIn(user);
+                }
+            }
+        );
     }
 
     async createNotificationListeners() {
@@ -79,8 +99,8 @@ export default class App extends Component {
     }
 
     render() {
-        const MainNavigator = createBottomTabNavigator({
-            authFlow: createBottomTabNavigator({
+        const MainNavigator = createSwitchNavigator({
+            authFlow: createSwitchNavigator({
                 auth: {
                     screen: AuthScreen
                 },
@@ -93,7 +113,7 @@ export default class App extends Component {
             }),
             main: createDrawerNavigator({
                 Device:  {
-                    screen: createBottomTabNavigator({
+                    screen: createSwitchNavigator({
                         addDevice: {
                             screen: AddDeviceScreen
                         },
@@ -134,8 +154,18 @@ export default class App extends Component {
         const AppContainer = createAppContainer(MainNavigator);
 
         return (
+            <AppContainer />
+        );
+    }
+}
+
+const Root = connect(null, actions)(RootComponent);
+
+export default class App extends Component{
+    render() {
+        return (
             <Provider store={store} >
-                <AppContainer />
+                <Root />
             </Provider>
         );
     }

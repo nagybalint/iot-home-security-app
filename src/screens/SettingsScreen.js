@@ -1,13 +1,35 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { Header, Button } from 'react-native-elements';
+import firebase from 'react-native-firebase';
 import { connect } from 'react-redux';
 
 import * as actions from '../actions';
 
 export class SettingsScreen extends Component {
-    logOutUser = () => {
+    logOutUser = async () => {
+        await this.props.logOutUser();
+        console.log('Waiting for logout over');
+    }
 
+    componentWillReceiveProps(nextProps) {
+        if(!nextProps.user) {
+            this.props.navigation.navigate('auth');
+        }
+    }
+
+    renderError = () => {
+        if(!this.props.error) {
+            return (<View></View>);
+        }
+
+        return (
+            <View>
+                <Text>
+                    Logging Out not successful! Please try again!
+                </Text>
+            </View>
+        );
     }
     
     render() {
@@ -28,6 +50,7 @@ export class SettingsScreen extends Component {
                     backgroundColor: "#3D6DCC"
                 }}
             />
+            {this.renderError()}
             <View style={styles.buttonContainerStyle} >
                 <Button 
                     buttonStyle={styles.buttonStyle}
@@ -62,4 +85,11 @@ const styles = StyleSheet.create({
     }
 });
 
-export default SettingsScreen;
+function mapStateToProps({ auth }) {
+    const { user, error } = auth;
+    return {
+        user, error
+    };
+}
+
+export default connect(mapStateToProps, actions)(SettingsScreen);
