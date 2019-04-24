@@ -50,15 +50,15 @@ class DeviceStatusScreen extends Component {
 
         const {
             timestamp,
-            camera_image,
-            motion_status
+            cameraImageURL,
+            motionStatus
         } = device_status;
 
         return (
             <DeviceStatus 
                     timestamp={timestamp}
-                    image={camera_image}
-                    motionStatus={motion_status}
+                    image={cameraImageURL}
+                    motionStatus={motionStatus}
             />
         );
     } 

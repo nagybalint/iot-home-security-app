@@ -68,9 +68,35 @@ export const fetchDeviceStatus = (deviceId) => async (dispatch) => {
 
     let doc = firebase.firestore().collection('devices').doc(deviceId);
 
-    let observer = doc.onSnapshot(docSnapshop => {
+    let observer = doc.onSnapshot(async (docSnapshop) => {
         let state = docSnapshop.get('state');
-        dispatch({ type: DEVICE_STATUS_FETCH_SUCCESS, payload: state });
+        console.log(`Device State read - ${state}`);
+
+        const { timestamp, camera_image, motion_status } = state;
+
+        let cameraImageURL;
+        if (!camera_image) {
+            cameraImageURL = null;
+        } else {
+            const imageRef = firebase.storage().ref(camera_image);
+            try {
+                cameraImageURL = await imageRef.getDownloadURL();
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        
+        console.log(`Payload assembled - ${payload}`);
+
+        const payload = {
+            timestamp,
+            cameraImageURL,
+            motionStatus: motion_status
+        };
+
+        console.log(payload);
+
+        dispatch({ type: DEVICE_STATUS_FETCH_SUCCESS, payload: payload });
     }, err => {
         console.log(`Error fetch status of ${deviceId}! Error: ${err}`);
     });

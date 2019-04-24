@@ -12,6 +12,10 @@ const IMAGE_HEIGHT = parseInt(IMAGE_WIDTH / 640.0 * 480.0);
 
 class DeviceStatus extends Component {
     getMotionStatus = () => {
+        if(typeof this.props.motionStatus === 'undefined') {
+            return 'No information available';
+        }
+
         if(this.props.motionStatus) {
             return 'Detecting motion';
         } else {
@@ -20,7 +24,28 @@ class DeviceStatus extends Component {
     }
 
     formatTime = (timestamp) => {
+        if(!timestamp) {
+            return 'No information available';
+        }
+
         return `${timestamp.getHours()}:${timestamp.getMinutes()} - ${timestamp.toDateString()}`;
+    }
+
+    renderImage = (imageSource) => {
+        if(!imageSource) {
+            return (
+                <Text style={styles.textStyle}>
+                    No information available
+                </Text>
+            );
+        } 
+
+        return (
+            <Image 
+                source={{uri: imageSource}}
+                style={styles.imageStyle}
+            />
+        );
     }
 
     render() {
@@ -30,7 +55,7 @@ class DeviceStatus extends Component {
                     <Text style={styles.headerStyle}>
                         Last Synced At
                     </Text>
-                    <Text>
+                    <Text style={styles.textStyle}>
                         {this.formatTime(this.props.timestamp)}
                     </Text>
                 </View>
@@ -38,10 +63,7 @@ class DeviceStatus extends Component {
                     <Text style={styles.headerStyle}>
                         Camera Image
                     </Text>
-                    <Image 
-                        source={{uri: this.props.image}}
-                        style={styles.imageStyle}
-                    />
+                    {this.renderImage(this.props.image)}
                 </View>
                 <View style={styles.flexContainerStyle}>
                     <Text style={styles.headerStyle}>
