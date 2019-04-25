@@ -11,7 +11,6 @@ const INITIAL_STATE = {
 };
 
 export default function(state = INITIAL_STATE, action) {
-    console.log('AuthReducer called');
     switch (action.type) {
         case USER_LOGIN_SUCCESS:
             return {

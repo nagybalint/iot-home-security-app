@@ -25,32 +25,29 @@ class RegisterScreen extends Component {
         let fcmToken = await AsyncStorage.getItem('fcmToken');
     
         const endPointURL = `${FIREBASE_CONFIG['functions_base_url']}/register_mobile_user`;
-        console.log(`Sending registration request for ${email} to ${endPointURL}`);
         
         try {
+            console.log(`Sending user registration request for ${email} to ${endPointURL}`);
             let res = await axios.post(endPointURL, {
                 email,
                 password,
                 fcm_token: fcmToken
             });
-
-            console.log("Results received");    
             
-            const { data } = res;
-
-            console.log(`Status code: ${res.status}`);
-            console.log(`Data: ${data}`);
+            console.log(`Response status -  ${res.status}`);
 
             this.setState({
                 error: null
             }, () => { 
+                // If the user registration was successful, forward to the login screen
                 this.props.navigation.navigate('login'); 
             });
 
         } catch (error) {
-            console.log(Object.keys(error.response.data));
+            const { data } = error.response;
+            console.log(data);
             this.setState({
-                error: error.response.data.error
+                error: data.error
             });
         }
     }
@@ -74,33 +71,40 @@ class RegisterScreen extends Component {
     }
 
     render() {
+
+        const {
+            containerStyle,
+            bannerContainerStyle,
+            authContainerStyle
+        } = styles;
+
         return(
-        <View style={styles.containerStyle}>
-            <View style={styles.bannerContainerStyle}>
-                <Banner />
+            <View style={containerStyle}>
+                <View style={bannerContainerStyle}>
+                    <Banner />
+                </View>
+                {
+                    this.renderRegistrationError()
+                }
+                <View style={authContainerStyle}>
+                    <AuthInput 
+                        confirmPassword={true}
+                        securePassword={true}
+                        placeholderUser="Email"
+                        userRules={{
+                            checker: checkEmailFormat,
+                            message: "Please enter a valid Email address"
+                        }}
+                        passwordRules={{
+                            checker: checkPasswordFormat,
+                            message: "The password must be at least 6 characters long!"
+                        }}
+                        placeholderPassword="Password"
+                        submitTitle="Register"
+                        submitAction={this.registerUser}
+                    />
+                </View>
             </View>
-            {
-                this.renderRegistrationError()
-            }
-            <View style={styles.authContainerStyle}>
-                <AuthInput 
-                    confirmPassword={true}
-                    securePassword={true}
-                    placeholderUser="Email"
-                    userRules={{
-                        checker: checkEmailFormat,
-                        message: "Please enter a valid Email address"
-                    }}
-                    passwordRules={{
-                        checker: checkPasswordFormat,
-                        message: "The password must be at least 6 characters long!"
-                    }}
-                    placeholderPassword="Password"
-                    submitTitle="Register"
-                    submitAction={this.registerUser}
-                />
-            </View>
-        </View>
         );
     }
 }

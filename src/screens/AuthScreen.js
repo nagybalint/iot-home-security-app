@@ -16,6 +16,7 @@ class AuthScreen extends Component {
     }
 
     onAuthComplete = (props) => {
+        // If the user is already logged in, forward to the addDevice screen
         if(props.user) {
             this.props.navigation.navigate('addDevice');
         }

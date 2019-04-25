@@ -6,7 +6,8 @@ import {
 
 const INTIAL_STATE = {
     in_progress: false,
-    device_status: null
+    device_status: null,
+    error: null
 };
 
 export default function(state = INTIAL_STATE, action) {
@@ -14,12 +15,13 @@ export default function(state = INTIAL_STATE, action) {
         case DEVICE_STATUS_FETCH_IN_PROGRESS:
             return {
                 ...state, 
-                in_progress: true
+                in_progress: true,
             };
         case DEVICE_STATUS_FETCH_SUCCESS:
             return { 
                 in_progress: false,
-                device_status: action.payload 
+                device_status: action.payload,
+                error: null
             };
         case DEVICE_STATUS_FETCH_FAIL:
             return {

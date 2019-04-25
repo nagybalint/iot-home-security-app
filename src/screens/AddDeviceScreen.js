@@ -18,13 +18,14 @@ class AddDeviceScreen extends Component {
     }
 
     onFetchComplete = (props) => {
+        // If the device id has been fetched successfully, forward to the deviceStatus screen
         if(props.device_id) {
             this.props.navigation.navigate('deviceStatus');
         }
     }
 
     renderScreen = () => {
-        if(this.props.device_fetch_in_progress) {
+        if(this.props.in_progress) {
             return (
                 <ActivityIndicator
                     size="large"
@@ -46,42 +47,58 @@ class AddDeviceScreen extends Component {
     }
 
     renderAddDeviceError = () => {
-        if (!this.props.error) {
+        const { error } = this.props;
+
+        const {
+            errorContainerStyle,
+            errorStyle
+        } = styles;
+
+        if (!error) {
             return (
-                <View style={styles.errorContainerStyle} >
+                <View style={errorContainerStyle} >
                 </View>
             );
         }
         
         return (
-            <View style={styles.errorContainerStyle} >
-                <Text style={styles.errorStyle}>
-                    {this.props.error}
+            <View style={errorContainerStyle} >
+                <Text style={errorStyle}>
+                    {`${error}`}
                 </Text>
             </View>
         );
     }
 
     render() {
+
+        const {
+            containerStyle,
+            centerComponentStyle,
+            authContainerStyle
+        } = styles;
+
         return(
-            <View style={styles.containerStyle}>
+            <View style={containerStyle}>
                 <Header 
                     centerComponent={{
                         text: "ADD DEVICE",
-                        style: styles.centerComponentStyle
+                        style: centerComponentStyle
                     }}
                     leftComponent={{
                         icon: 'menu',
                         color: '#fff',
                         onPress: this.props.navigation.openDrawer
                     }}
-                    statusBarProps={{translucent: true}}
+                    statusBarProps={{
+                        translucent: true
+                    }}
                     containerStyle={{
                         backgroundColor: "#3D6DCC"
                     }}
                 />
                 {this.renderAddDeviceError()}
-                <View style={styles.authContainerStyle}>
+                <View style={authContainerStyle}>
                     {this.renderScreen()}
                 </View>
             </View>
@@ -121,9 +138,9 @@ const styles = StyleSheet.create({
 function mapStateToProps({ deviceInfo }) {
     const { in_progress, error, device_id } = deviceInfo;
     return { 
-        device_fetch_in_progress: in_progress, 
-        error: error, 
-        device_id: device_id
+        in_progress, 
+        error, 
+        device_id
     };
 }
 

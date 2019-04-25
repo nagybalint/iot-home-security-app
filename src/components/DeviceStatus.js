@@ -9,11 +9,13 @@ const IMAGE_HEIGHT = parseInt(IMAGE_WIDTH / 640.0 * 480.0);
 
 class DeviceStatus extends Component {
     getMotionStatus = () => {
-        if(typeof this.props.motionStatus === 'undefined') {
+        const { motionStatus } = this.props;
+
+        if(typeof motionStatus === 'undefined') {
             return 'No information available';
         }
 
-        if(this.props.motionStatus) {
+        if(motionStatus) {
             return 'Detecting motion';
         } else {
             return 'No motion detected';
@@ -29,9 +31,14 @@ class DeviceStatus extends Component {
     }
 
     renderImage = (imageSource) => {
+        const {
+            textStyle,
+            imageStyle
+        } = styles;
+
         if(!imageSource) {
             return (
-                <Text style={styles.textStyle}>
+                <Text style={textStyle}>
                     No information available
                 </Text>
             );
@@ -39,34 +46,48 @@ class DeviceStatus extends Component {
 
         return (
             <Image 
-                source={{uri: imageSource}}
-                style={styles.imageStyle}
+                source={{
+                    uri: imageSource
+                }}
+                style={imageStyle}
             />
         );
     }
 
     render() {
+        const {
+            containerStyle,
+            flexContainerStyle,
+            headerStyle,
+            textStyle
+        } = styles;
+
+        const {
+            timestamp,
+            image
+        } = this.props;
+
         return(
-            <View style={styles.containerStyle}>
-                <View style={styles.flexContainerStyle}>
-                    <Text style={styles.headerStyle}>
+            <View style={containerStyle}>
+                <View style={flexContainerStyle}>
+                    <Text style={headerStyle}>
                         Last Synced At
                     </Text>
-                    <Text style={styles.textStyle}>
-                        {this.formatTime(this.props.timestamp)}
+                    <Text style={textStyle}>
+                        {this.formatTime(timestamp)}
                     </Text>
                 </View>
-                <View style={styles.flexContainerStyle}>
-                    <Text style={styles.headerStyle}>
+                <View style={flexContainerStyle}>
+                    <Text style={headerStyle}>
                         Camera Image
                     </Text>
-                    {this.renderImage(this.props.image)}
+                    {this.renderImage(image)}
                 </View>
-                <View style={styles.flexContainerStyle}>
-                    <Text style={styles.headerStyle}>
+                <View style={flexContainerStyle}>
+                    <Text style={headerStyle}>
                         Motion Sensor Status
                     </Text>
-                    <Text style={styles.textStyle}>
+                    <Text style={textStyle}>
                         {this.getMotionStatus()}
                     </Text>
                 </View>

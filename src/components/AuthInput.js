@@ -25,24 +25,34 @@ class AuthInput extends Component {
     }
 
     renderConfirmInput = () => {
-        if(!this.props.confirmPassword) {
+        const {
+            confirmPassword,
+            placeholderPassword,
+            securePassword
+        } = this.props;
+
+        if(!confirmPassword) {
             return (<View></View>);
         } 
 
         const {
             inputIconStyle,
             inputContainerStyle,
+            errorStyle
         } = styles;
 
-        const placeholderText = `Confirm ${this.props.placeholderPassword}`;
+        const placeholderText = `Confirm ${placeholderPassword}`;
 
         return (
             <Input
                 placeholder={placeholderText}
-                secureTextEntry={this.props.securePassword}
-                errorStyle={styles.errorStyle}
+                secureTextEntry={securePassword}
+                errorStyle={errorStyle}
                 errorMessage={this.getErrorMessage('confirm')}
-                leftIcon={{ type: 'font-awesome', name: 'lock' }}
+                leftIcon={{ 
+                    type: 'font-awesome', 
+                    name: 'lock' 
+                }}
                 leftIconContainerStyle={inputIconStyle}
                 containerStyle={inputContainerStyle}
                 onChangeText={ (confirm) => { this.setState({ confirm, error: null }) } }
@@ -54,28 +64,53 @@ class AuthInput extends Component {
         const { user, password, confirm } = this.state;
 
         if(!user) {
-            this.setState({ error: { type: 'user', message: 'Required'}});
+            this.setState({ 
+                error: { 
+                    type: 'user', 
+                    message: 'Required'
+                }
+            });
             return false;
         }
 
         if(!password) {
-            this.setState({ error: { type: 'password', message: 'Required'}});
+            this.setState({ 
+                error: { 
+                    type: 'password', 
+                    message: 'Required'
+                }
+            });
             return false;
         }
 
         if(!this.props.userRules.checker(user)) {
-            this.setState({ error: { type: 'user', message: this.props.userRules.message}});
+            this.setState({ 
+                error: { 
+                    type: 'user', 
+                    message: this.props.userRules.message
+                }
+            });
             return false;
         }
 
         if(!this.props.passwordRules.checker(password)) {
-            this.setState({ error: { type: 'password', message: this.props.passwordRules.message}});
+            this.setState({ 
+                error: { 
+                    type: 'password', 
+                    message: this.props.passwordRules.message
+                }
+            });
             return false;
         }
 
         if(this.props.confirmPassword) {
             if(!confirm || (password != confirm)) {
-                this.setState({ error: { type: 'confirm', message: `Does Not Match ${this.props.placeholderPassword} Above`}});
+                this.setState({ 
+                    error: { 
+                        type: 'confirm', 
+                        message: `Does Not Match ${this.props.placeholderPassword} Above`
+                    }
+                });
                 return false;
             }
         }
@@ -123,26 +158,43 @@ class AuthInput extends Component {
             containerStyle,
             inputIconStyle,
             inputContainerStyle,
-            buttonStyle
+            buttonStyle,
+            errorStyle
         } = styles;
+
+        const {
+            placeholderUser,
+            placeholderPassword,
+            securePassword,
+            submitTitle
+        } = this.props;
+
+        const { in_progress } = this.state;
+
         return(
         <View style={containerStyle}>
             <View>
                 <Input
-                    placeholder={this.props.placeholderUser}
-                    errorStyle={styles.errorStyle}
+                    placeholder={placeholderUser}
+                    errorStyle={errorStyle}
                     errorMessage={this.getErrorMessage('user')}
-                    leftIcon={{ type: 'font-awesome', name: 'user' }}
+                    leftIcon={{ 
+                        type: 'font-awesome', 
+                        name: 'user' 
+                    }}
                     leftIconContainerStyle={inputIconStyle}
                     containerStyle={inputContainerStyle}
                     onChangeText={ (user) => this.setState({ user, error: null }) }
                 />
                 <Input
-                    placeholder={this.props.placeholderPassword}
-                    secureTextEntry={this.props.securePassword}
-                    errorStyle={styles.errorStyle}
+                    placeholder={placeholderPassword}
+                    secureTextEntry={securePassword}
+                    errorStyle={errorStyle}
                     errorMessage={this.getErrorMessage('password')}
-                    leftIcon={{ type: 'font-awesome', name: 'lock' }}
+                    leftIcon={{ 
+                        type: 'font-awesome', 
+                        name: 'lock' 
+                    }}
                     leftIconContainerStyle={inputIconStyle}
                     containerStyle={inputContainerStyle}
                     onChangeText={ (password) => { this.setState({ password, error: null }) } }
@@ -150,11 +202,11 @@ class AuthInput extends Component {
                 {this.renderConfirmInput()}
             </View>
             <Button 
-                title={this.props.submitTitle}
+                title={submitTitle}
                 buttonStyle={buttonStyle}
                 onPress={this.onSubmitPress}
-                loading={this.state.in_progress}
-                disabled={this.state.in_progress}
+                loading={in_progress}
+                disabled={in_progress}
             />
         </View>
         );

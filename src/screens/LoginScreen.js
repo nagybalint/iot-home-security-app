@@ -17,6 +17,13 @@ class LoginScreen extends Component {
         this.onAuthComplete(nextProps);
     }
 
+    onAuthComplete = (props) => {
+        // If the user has successfully logged in, forward to the addDevice screen
+        if(props.user) {
+            this.props.navigation.navigate('addDevice');
+        }
+    }
+
     submitLoginRequest = async (user, password) => {
         await this.props.logInUser(user, password);
     }
@@ -26,50 +33,54 @@ class LoginScreen extends Component {
         return pattern.test(email);
     }
 
-    onAuthComplete = (props) => {
-        if(props.user) {
-            this.props.navigation.navigate('addDevice');
-        }
-    }
-
     renderLoginError = () => {
         const { errorContainerStyle, errorMessageStyle } = styles;
 
-        if(!this.props.error) {
+        const { error } = this.props;
+
+        // If there is no login error, display empty view
+        if(!error) {
             return (<View style={errorContainerStyle}></View>);
         }
 
         return (
             <View style={errorContainerStyle}>
                 <Text style={errorMessageStyle}>
-                    Loggin In Not Successful! Please try again!
+                    {`${error}`}
                 </Text>
             </View>
         );
     }
 
     render() {
+
+        const {
+            containerStyle,
+            bannerContainerStyle,
+            authContainerStyle
+        } = styles;
+
         return(
-            <View style={styles.containerStyle}>
-            <View style={styles.bannerContainerStyle}>
-                <Banner />
+            <View style={containerStyle}>
+                <View style={bannerContainerStyle}>
+                    <Banner />
+                </View>
+                {this.renderLoginError()}
+                <View style={authContainerStyle}>
+                    <AuthInput 
+                        confirmPassword={false}
+                        securePassword={true}
+                        placeholderUser="Email"
+                        userRules={{
+                            checker: this.checkEmailFormat,
+                            message: "Please enter a valid Email address"
+                        }}
+                        placeholderPassword="Password"
+                        submitTitle="Log In"
+                        submitAction={this.submitLoginRequest}
+                    />
+                </View>
             </View>
-            {this.renderLoginError()}
-            <View style={styles.authContainerStyle}>
-                <AuthInput 
-                    confirmPassword={false}
-                    securePassword={true}
-                    placeholderUser="Email"
-                    userRules={{
-                        checker: this.checkEmailFormat,
-                        message: "Please enter a valid Email address"
-                    }}
-                    placeholderPassword="Password"
-                    submitTitle="Log In"
-                    submitAction={this.submitLoginRequest}
-                />
-            </View>
-        </View>
         );
     }
 }

@@ -4,7 +4,7 @@ export const showNotificationAlert = (title, body) => {
     Alert.alert(
         title, body, 
         [
-            {text: 'OK', onPress: () => console.log('On pressed on Notification Alert')}
+            {text: 'OK', onPress: () => console.log('Notification Alert dismissed')}
         ],
         { cancelable: false }
     );

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, ActivityIndicator, Icon } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, Text } from 'react-native';
 import { Header, Button } from 'react-native-elements';
 import { connect } from 'react-redux';
 
@@ -19,17 +19,21 @@ class DeviceStatusScreen extends Component {
 
     renderRefreshButton = () => {
         const { 
-            in_progress,
+            deviceStatus,
             statusUpdateRequest
         } = this.props;
 
-        const disabled = in_progress || statusUpdateRequest.in_progress;
         const loading = statusUpdateRequest.in_progress;
+        // Refresh button disabled while the device status is being fetched or a
+        // status update request is being sent
+        const disabled = deviceStatus.in_progress || statusUpdateRequest.in_progress;
+
+        const { refreshButtonStyle } = styles;
 
         return (
             <Button
-                buttonStyle={styles.refreshButtonStyle}
-                disabledStyle={styles.refreshButtonStyle}
+                buttonStyle={refreshButtonStyle}
+                disabledStyle={refreshButtonStyle}
                 containerStyle={{
                     padding: 0
                 }}
@@ -50,17 +54,45 @@ class DeviceStatusScreen extends Component {
         );
     }
 
+    renderError = () => {
+        const {
+            errorContainerStyle,
+            errorStyle
+        } = styles;
+
+        const {
+            deviceStatus,
+            statusUpdateRequest
+        } = this.props;
+
+        // If there is no error, return an empty View
+        if(!deviceStatus.error && !statusUpdateRequest.error) {
+            return (<View></View>);
+        }
+
+        // Only display status update request error if there is no device status error
+        const error = deviceStatus.error ? deviceStatus.error : statusUpdateRequest.error;
+
+        return (
+            <View style={errorContainerStyle} >
+                <Text style={errorStyle} >
+                    {`${error}`}
+                </Text>
+            </View>
+        );
+
+    }
+
     renderSpinner = () => {
-        const { in_progress } = this.props;
+        // If the device status fetch is in progress, display a spinner
+        const { in_progress } = this.props.deviceStatus;
         
         if(!in_progress){
             return (<View></View>);
         }
 
         return (
-            <View 
-                style={styles.spinnerContainerStyle}
-            >
+            <View style={styles.spinnerContainerStyle} >
                 <ActivityIndicator
                     size="large"
                     color="#3D6DCC"
@@ -70,7 +102,9 @@ class DeviceStatusScreen extends Component {
     }
 
     renderDeviceStatus = () => {
-        const { device_status } = this.props; 
+        const { device_status } = this.props.deviceStatus; 
+
+        // If no device status has been fetched, return an empty View
         if(!device_status) {
             return (<View></View>);
         }
@@ -91,12 +125,18 @@ class DeviceStatusScreen extends Component {
     } 
 
     render() {
+
+        const {
+            containerStyle,
+            centerComponentStyle
+        } = styles;
+
         return(
-            <View style={styles.containerStyle}>
+            <View style={containerStyle}>
                 <Header 
                     centerComponent={{
                         text: "DEVICE STATUS",
-                        style: styles.centerComponentStyle
+                        style: centerComponentStyle
                     }}
                     leftComponent={{
                         icon: 'menu',
@@ -104,11 +144,14 @@ class DeviceStatusScreen extends Component {
                         onPress: this.props.navigation.openDrawer
                     }}
                     rightComponent={this.renderRefreshButton()}
-                    statusBarProps={{translucent: true}}
+                    statusBarProps={{
+                        translucent: true
+                    }}
                     containerStyle={{
                         backgroundColor: "#3D6DCC"
                     }}
                 />
+                {this.renderError()}
                 {this.renderSpinner()}
                 {this.renderDeviceStatus()}
             </View>
@@ -134,15 +177,23 @@ const styles = StyleSheet.create({
         padding: 0,
         height: 40,
         width: 40
+    },
+    errorContainerStyle: {
+        marginTop: 10,
+        height: 20,
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    errorStyle: {
+        color: 'red'
     }
 });
 
 function mapStateToProps({ deviceStatus, deviceInfo, deviceStatusUpdate }) {
-    const { in_progress, device_status } = deviceStatus;
     const { device_id } = deviceInfo;
     return { 
-        in_progress, 
-        device_status, 
+        deviceStatus, 
         device_id, 
         statusUpdateRequest: deviceStatusUpdate 
     };

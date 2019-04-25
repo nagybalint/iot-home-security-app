@@ -13,6 +13,8 @@ const appReducer = combineReducers({
 
 export default rootReducer = (state, action) => {
     if(action.type === USER_LOGOUT_SUCCESS ) {
+        // If the user has logged out, remove any user related variables from
+        // AsyncStorage and reset application state
         AsyncStorage.removeItem('deviceId');
         state = undefined;
     }
