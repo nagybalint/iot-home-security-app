@@ -34,16 +34,11 @@ import { YellowBox } from 'react-native';
 YellowBox.ignoreWarnings(['ViewPagerAndroid', 'Slider', 'Remote debugger']);
 
 class RootComponent extends Component {
-    async cleanSheet() {
-        await AsyncStorage.removeItem('deviceId');
-        await firebase.auth().signOut();
-    }
     
     async componentDidMount() {
         checkPermission();
         this.createNotificationListeners();
         this.createAuthStateListener();
-        //await this.cleanSheet();
     }
 
     async componentWillUnmount() {
