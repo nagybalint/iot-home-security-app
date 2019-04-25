@@ -2,12 +2,13 @@ import { combineReducers } from 'redux';
 import deviceStatus from './device_status_reducer';
 import auth from './auth_reducers';
 import deviceInfo from './device_info_reducer';
+import deviceStatusUpdate from './device_update_reducer';
 
 import { USER_LOGOUT_SUCCESS } from '../actions/types';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const appReducer = combineReducers({
-    auth, deviceInfo, deviceStatus
+    auth, deviceInfo, deviceStatus, deviceStatusUpdate
 });
 
 export default rootReducer = (state, action) => {

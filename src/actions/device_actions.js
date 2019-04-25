@@ -8,9 +8,12 @@ import {
     DEVICE_INFO_FETCH_SUCCESS,
     DEVICE_INFO_FETCH_FAIL,
     DEVICE_STATUS_FETCH_SUCCESS,
-    DEVICE_STATUS_FETCH_IN_PROGRESS
+    DEVICE_STATUS_FETCH_IN_PROGRESS,
+    DEVICE_STATUS_FETCH_FAIL,
+    DEVICE_STATUS_UPDATE_REQUEST_IN_PROGRESS,
+    DEVICE_STATUS_UPDATE_REQUEST_SUCCESS,
+    DEVICE_STATUS_UPDATE_REQUEST_FAIL
 } from './types';
-import { getDeviceId } from '../services/device_management';
 
 export const addDevice = (device_id, verification_code) => async (dispatch) => {
     let addDeviceFun = firebase.functions().httpsCallable('add_device');
@@ -18,7 +21,7 @@ export const addDevice = (device_id, verification_code) => async (dispatch) => {
         console.log(`Calling add_device endpoint with ${device_id}, ${verification_code}`);
         let result = await addDeviceFun({device_id, verification_code});
         
-        console.log(`Adding device success = ${result.success}`);
+        console.log(`Success - ${result.success}`);
 
         await AsyncStorage.setItem('deviceId', device_id);
         dispatch({ type: ADD_DEVICE_SUCCESS, payload: device_id });
@@ -49,7 +52,8 @@ export const fetchDeviceInfo = () => async (dispatch) => {
         console.log(`Results is - ${result.data.device_id}`);
         const { device_id } = result.data;
         if(!device_id) {
-            console.log(`Device Id Fetch failed`);
+            console.log(`Device Id Fetch failed due to no device being registered to the user yet`);
+            // This is not an error, dispatch the action with a payload of null
             dispatch({ type: DEVICE_INFO_FETCH_FAIL, payload: null });
         } else {
             console.log(`Device Id fetch successful - ${device_id}`);
@@ -68,16 +72,20 @@ export const fetchDeviceStatus = (deviceId) => async (dispatch) => {
 
     let doc = firebase.firestore().collection('devices').doc(deviceId);
 
+    console.log('Registering listener for the device record in firestore');
     let observer = doc.onSnapshot(async (docSnapshop) => {
+        console.log('Device status updated');
+
         let state = docSnapshop.get('state');
-        console.log(`Device State read - ${state}`);
 
         const { timestamp, camera_image, motion_status } = state;
 
+        // Get a download URL to the camera image if present in the device status
         let cameraImageURL;
         if (!camera_image) {
             cameraImageURL = null;
         } else {
+            console.log('Create download URL for the camera image')
             const imageRef = firebase.storage().ref(camera_image);
             try {
                 cameraImageURL = await imageRef.getDownloadURL();
@@ -85,8 +93,6 @@ export const fetchDeviceStatus = (deviceId) => async (dispatch) => {
                 console.log(error);
             }
         }
-        
-        console.log(`Payload assembled - ${payload}`);
 
         const payload = {
             timestamp,
@@ -94,10 +100,38 @@ export const fetchDeviceStatus = (deviceId) => async (dispatch) => {
             motionStatus: motion_status
         };
 
+        console.log(`Action payload assembled`);
         console.log(payload);
 
         dispatch({ type: DEVICE_STATUS_FETCH_SUCCESS, payload: payload });
     }, err => {
-        console.log(`Error fetch status of ${deviceId}! Error: ${err}`);
+        console.log(`Error occured during fetching the status of ${deviceId}! Error: ${err}`);
+        dispatch({ 
+            type: DEVICE_STATUS_FETCH_FAIL, 
+            payload: 'Could not download device status! Please refresh!' 
+        });
     });
+}
+
+export const sendStatusUpdateRequest = (deviceId) => async (dispatch) => {
+    console.log(`Sendind status update request to ${deviceId}`);
+    dispatch({ type: DEVICE_STATUS_UPDATE_REQUEST_IN_PROGRESS, payload: {} });
+
+    let sendCommand = firebase.functions().httpsCallable('send_command');
+
+    try {
+        let result = await sendCommand.call({ });
+        const { success } = result.data;
+        if(success) {
+            dispatch({ type: DEVICE_STATUS_UPDATE_REQUEST_SUCCESS, payload: {} });
+        } else {
+            dispatch({ 
+                type: DEVICE_STATUS_UPDATE_REQUEST_FAIL, 
+                payload: 'Status update request could not be sent! Please try again!' 
+            });
+        }
+    } catch (error) {
+        console.log(`Sending status update request failed - ${error}`);
+        dispatch({ type: DEVICE_STATUS_UPDATE_REQUEST_FAIL, payload: error.message });
+    }
 }

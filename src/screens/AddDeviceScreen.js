@@ -58,7 +58,7 @@ class AddDeviceScreen extends Component {
             );
         }
         
-        console.log('Adding error :) ');
+        console.log('Error occured adding device');
         return (
             <View style={styles.errorContainerStyle} >
                 <Text style={styles.errorStyle}>

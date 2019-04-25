@@ -23,9 +23,9 @@ export const logInUser = (user, password) => async (dispatch) => {
         let userCredential = await firebase.auth().signInWithEmailAndPassword(user, password); 
         // On success, the new state will be returned from the userLoggedIn action,
         // called from the Auth State Change listener
-    } catch (err) {
+    } catch (error) {
         console.log("Login Failed");
-        dispatch( { type: USER_LOGIN_FAIL, payload: err });
+        dispatch( { type: USER_LOGIN_FAIL, payload: error });
     }
 }
 

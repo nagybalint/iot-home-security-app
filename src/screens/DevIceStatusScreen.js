@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, ActivityIndicator } from 'react-native';
-import { Header } from 'react-native-elements';
+import { StyleSheet, View, ActivityIndicator, Icon } from 'react-native';
+import { Header, Button } from 'react-native-elements';
 import { connect } from 'react-redux';
+
+import sleep from '../utils/sleep';
 
 import * as actions from '../actions';
 
@@ -14,9 +16,42 @@ class DeviceStatusScreen extends Component {
         this.props.fetchDeviceStatus(this.props.device_id);
     }
 
-    requestDeviceStatus = () => {
-        // TODO!
+    requestDeviceStatus = async () => {
         console.log("Requesting Device Status");
+        await this.props.sendStatusUpdateRequest(this.props.device_id);
+    }
+
+    renderRefreshButton = () => {
+        const { 
+            in_progress,
+            statusUpdateRequest
+        } = this.props;
+
+        const disabled = in_progress || statusUpdateRequest.in_progress;
+        const loading = statusUpdateRequest.in_progress;
+
+        return (
+            <Button
+                buttonStyle={styles.refreshButtonStyle}
+                disabledStyle={styles.refreshButtonStyle}
+                containerStyle={{
+                    padding: 0
+                }}
+                icon={{ 
+                    name: 'sync',
+                    color: `rgba(255, 255, 255, ${disabled ? '0.25' : '1.0'})`
+                }}
+                iconRight={false}
+                loading={loading}
+                loadingProps={{
+                    color: '#fff'
+                }}
+                title={null}
+                disabled={disabled}
+                type='clear'
+                onPress={this.requestDeviceStatus}
+            />
+        );
     }
 
     renderSpinner = () => {
@@ -28,11 +63,7 @@ class DeviceStatusScreen extends Component {
 
         return (
             <View 
-                style={
-                    !device_status ? 
-                        styles.spinnerInCenterContainerStyle : 
-                        styles.spinnerOnTopContainerStyle
-                }
+                style={styles.spinnerContainerStyle}
             >
                 <ActivityIndicator
                     size="large"
@@ -77,11 +108,7 @@ class DeviceStatusScreen extends Component {
                         color: '#fff',
                         onPress: this.props.navigation.openDrawer
                     }}
-                    rightComponent={{ 
-                        icon: 'sync', 
-                        color: '#fff',
-                        onPress: this.requestDeviceStatus
-                    }}
+                    rightComponent={this.renderRefreshButton()}
                     statusBarProps={{translucent: true}}
                     containerStyle={{
                         backgroundColor: "#3D6DCC"
@@ -102,22 +129,28 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16
     },
-    spinnerOnTopContainerStyle: {
-        marginTop: 20,
-        marginBottom: 20
-    },
-    spinnerInCenterContainerStyle: {
+    spinnerContainerStyle: {
         flex: 1,
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center"
+    },
+    refreshButtonStyle: {
+        padding: 0,
+        height: 40,
+        width: 40
     }
 });
 
-function mapStateToProps({ deviceStatus, deviceInfo}) {
+function mapStateToProps({ deviceStatus, deviceInfo, deviceStatusUpdate }) {
     const { in_progress, device_status } = deviceStatus;
     const { device_id } = deviceInfo;
-    return { in_progress, device_status, device_id };
+    return { 
+        in_progress, 
+        device_status, 
+        device_id, 
+        statusUpdateRequest: deviceStatusUpdate 
+    };
 }
 
 export default connect(mapStateToProps, actions)(DeviceStatusScreen);

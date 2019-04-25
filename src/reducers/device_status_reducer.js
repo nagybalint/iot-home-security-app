@@ -1,6 +1,7 @@
 import { 
     DEVICE_STATUS_FETCH_IN_PROGRESS,
-    DEVICE_STATUS_FETCH_SUCCESS
+    DEVICE_STATUS_FETCH_SUCCESS,
+    DEVICE_STATUS_FETCH_FAIL
  } from '../actions/types';
 
 const INTIAL_STATE = {
@@ -20,6 +21,12 @@ export default function(state = INTIAL_STATE, action) {
                 in_progress: false,
                 device_status: action.payload 
             };
+        case DEVICE_STATUS_FETCH_FAIL:
+            return {
+                in_progress: false,
+                device_status: null,
+                error: action.payload
+            }
         default:
             return state;
     }

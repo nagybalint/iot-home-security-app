@@ -25,7 +25,7 @@ class RegisterScreen extends Component {
         let fcmToken = await AsyncStorage.getItem('fcmToken');
     
         const endPointURL = `${FIREBASE_CONFIG['functions_base_url']}/register_mobile_user`;
-        console.log(`Sending request with ${email} - ${password} to ${endPointURL}`);
+        console.log(`Sending registration request for ${email} to ${endPointURL}`);
         
         try {
             let res = await axios.post(endPointURL, {
