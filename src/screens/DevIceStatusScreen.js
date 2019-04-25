@@ -3,8 +3,6 @@ import { StyleSheet, View, ActivityIndicator, Icon } from 'react-native';
 import { Header, Button } from 'react-native-elements';
 import { connect } from 'react-redux';
 
-import sleep from '../utils/sleep';
-
 import * as actions from '../actions';
 
 import DeviceStatus from '../components/DeviceStatus';
@@ -12,12 +10,10 @@ import DeviceStatus from '../components/DeviceStatus';
 class DeviceStatusScreen extends Component {
 
     componentDidMount() {
-        console.log('DeviceStatusScreen did mount');
         this.props.fetchDeviceStatus(this.props.device_id);
     }
 
     requestDeviceStatus = async () => {
-        console.log("Requesting Device Status");
         await this.props.sendStatusUpdateRequest(this.props.device_id);
     }
 
@@ -55,7 +51,7 @@ class DeviceStatusScreen extends Component {
     }
 
     renderSpinner = () => {
-        const { in_progress, device_status } = this.props;
+        const { in_progress } = this.props;
         
         if(!in_progress){
             return (<View></View>);
@@ -95,7 +91,6 @@ class DeviceStatusScreen extends Component {
     } 
 
     render() {
-        console.log("Rendering DeviceStatusScreen");
         return(
             <View style={styles.containerStyle}>
                 <Header 

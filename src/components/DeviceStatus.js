@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, Dimensions } from 'react-native';
-import {
-    Image,
-    Divider
-} from 'react-native-elements';
+import { Image } from 'react-native-elements';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const PADDING_SIDE = 6;

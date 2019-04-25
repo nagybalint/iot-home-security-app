@@ -21,7 +21,7 @@ class RegisterScreen extends Component {
     }
     
     registerUser = async (email, password) => {
-        console.log("Registering user");
+        console.log("Registering mobile user");
         let fcmToken = await AsyncStorage.getItem('fcmToken');
     
         const endPointURL = `${FIREBASE_CONFIG['functions_base_url']}/register_mobile_user`;

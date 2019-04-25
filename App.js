@@ -7,10 +7,8 @@
  */
 
 import React, { Component } from 'react';
-import { View, Text, Alert } from 'react-native';
 import { 
     createAppContainer, 
-    createBottomTabNavigator, 
     createDrawerNavigator, 
     createSwitchNavigator
 } from 'react-navigation';

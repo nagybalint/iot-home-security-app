@@ -2,22 +2,18 @@ import React, { Component } from 'react';
 import { View, ActivityIndicator, StyleSheet, Text } from 'react-native';
 import { Header } from 'react-native-elements';
 import { connect } from 'react-redux';
-import firebase from 'react-native-firebase';
 
 import * as actions from '../actions';
 
 import AuthInput from '../components/AuthInput';
-import AsyncStorage from '@react-native-community/async-storage';
 
 class AddDeviceScreen extends Component {
     componentDidMount() {
-        console.log('AddDeviceScreen did mount');
         this.props.fetchDeviceInfo();
         this.onFetchComplete(this.props);
     }
     
     componentWillReceiveProps(nextProps) {
-        console.log('AddDeviceScreen will receive new props');
         this.onFetchComplete(nextProps);
     }
 
@@ -50,7 +46,6 @@ class AddDeviceScreen extends Component {
     }
 
     renderAddDeviceError = () => {
-        console.log('Error render called');
         if (!this.props.error) {
             return (
                 <View style={styles.errorContainerStyle} >
@@ -58,7 +53,6 @@ class AddDeviceScreen extends Component {
             );
         }
         
-        console.log('Error occured adding device');
         return (
             <View style={styles.errorContainerStyle} >
                 <Text style={styles.errorStyle}>
@@ -69,7 +63,6 @@ class AddDeviceScreen extends Component {
     }
 
     render() {
-        console.log('Rendering AddDeviceScreen');
         return(
             <View style={styles.containerStyle}>
                 <Header 
@@ -126,7 +119,6 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps({ deviceInfo }) {
-    console.log(`Map state to props addDeviceScreen`);
     const { in_progress, error, device_id } = deviceInfo;
     return { 
         device_fetch_in_progress: in_progress, 

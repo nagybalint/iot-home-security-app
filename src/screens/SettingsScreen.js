@@ -9,7 +9,6 @@ import * as actions from '../actions';
 export class SettingsScreen extends Component {
     logOutUser = async () => {
         await this.props.logOutUser();
-        console.log('Waiting for logout over');
     }
 
     componentWillReceiveProps(nextProps) {

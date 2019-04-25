@@ -8,12 +8,10 @@ import Banner from '../components/Banner';
 class AuthScreen extends Component {
 
     componentDidMount() {
-        console.log('AuthScreen did mount');
         this.onAuthComplete(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log('AuthScreen will receive new props');
         this.onAuthComplete(nextProps);
     }
 
